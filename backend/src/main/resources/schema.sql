@@ -1,4 +1,4 @@
-CREATE TABLE cake (
+CREATE TABLE IF NOT EXISTS cake (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   name varchar(40) NOT NULL,
   description varchar(40) NOT NULL,
