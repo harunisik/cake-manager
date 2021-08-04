@@ -40,7 +40,7 @@ public class ObjectFactory {
         return CakeUpdateRequest.builder()
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .createdBy(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
             .build();
     }
 

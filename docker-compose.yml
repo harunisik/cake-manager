@@ -22,6 +22,14 @@ services:
     networks: # Networks to join (Services on the same network can communicate with each other using their name)
       - backend
 
+  frontend:
+    container_name: frontend
+    build:
+      context: frontend 
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
   # Database Service (Mysql)
   db:
     image: mysql:5.7

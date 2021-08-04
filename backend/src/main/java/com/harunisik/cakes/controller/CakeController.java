@@ -74,8 +74,7 @@ public class CakeController {
     }
 
     @DeleteMapping(DELETE_CAKE_URL)
-    public ResponseEntity<CakeResponse> deleteCake(
-        @Valid @PathVariable(value = "id") String id) {
+    public ResponseEntity<CakeResponse> deleteCake(@Valid @PathVariable(value = "id") String id) {
         logger.info("deleteCake api called.");
 
         CakeResponse cakeResponse = cakeService.deleteCake(Long.parseLong(id));

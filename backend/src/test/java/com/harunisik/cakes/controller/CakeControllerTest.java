@@ -2,6 +2,7 @@ package com.harunisik.cakes.controller;
 
 
 import static com.harunisik.cakes.constant.UrlConstants.CREATE_CAKE_URL;
+import static com.harunisik.cakes.constant.UrlConstants.DELETE_CAKE_URL;
 import static com.harunisik.cakes.constant.UrlConstants.GET_ALL_CAKES_URL;
 import static com.harunisik.cakes.constant.UrlConstants.GET_CAKE_BY_ID_URL;
 import static com.harunisik.cakes.constant.UrlConstants.UPDATE_CAKE_URL;
@@ -76,9 +77,7 @@ public class CakeControllerTest {
             .andExpect(jsonPath(format(JSON_EXPRESSION2, "cakeList", 0, id)).value(ObjectFactory.CAKE_ID))
             .andExpect(jsonPath(format(JSON_EXPRESSION2, "cakeList", 0, name)).value(ObjectFactory.NAME))
             .andExpect(jsonPath(format(JSON_EXPRESSION2, "cakeList", 0, description)).value(ObjectFactory.DESCRIPTION))
-            .andExpect(jsonPath(format(JSON_EXPRESSION2, "cakeList", 0, createdBy)).value(ObjectFactory.CREATED_BY))
-            .andExpect(
-                jsonPath(format(JSON_EXPRESSION2, "cakeList", 0, createdDate)).value(ObjectFactory.CREATED_DATE));
+            .andExpect(jsonPath(format(JSON_EXPRESSION2, "cakeList", 0, createdBy)).value(ObjectFactory.CREATED_BY));
     }
 
     @Test
@@ -91,8 +90,7 @@ public class CakeControllerTest {
             .andExpect(jsonPath(format(JSON_EXPRESSION, id)).value(ObjectFactory.CAKE_ID))
             .andExpect(jsonPath(format(JSON_EXPRESSION, name)).value(ObjectFactory.NAME))
             .andExpect(jsonPath(format(JSON_EXPRESSION, description)).value(ObjectFactory.DESCRIPTION))
-            .andExpect(jsonPath(format(JSON_EXPRESSION, createdBy)).value(ObjectFactory.CREATED_BY))
-            .andExpect(jsonPath(format(JSON_EXPRESSION, createdDate)).value(ObjectFactory.CREATED_DATE));
+            .andExpect(jsonPath(format(JSON_EXPRESSION, createdBy)).value(ObjectFactory.CREATED_BY));
     }
 
     @Test
@@ -121,8 +119,7 @@ public class CakeControllerTest {
             .andExpect(jsonPath(format(JSON_EXPRESSION, id)).value(ObjectFactory.CAKE_ID))
             .andExpect(jsonPath(format(JSON_EXPRESSION, name)).value(ObjectFactory.NAME))
             .andExpect(jsonPath(format(JSON_EXPRESSION, description)).value(ObjectFactory.DESCRIPTION))
-            .andExpect(jsonPath(format(JSON_EXPRESSION, createdBy)).value(ObjectFactory.CREATED_BY))
-            .andExpect(jsonPath(format(JSON_EXPRESSION, createdDate)).value(ObjectFactory.CREATED_DATE));
+            .andExpect(jsonPath(format(JSON_EXPRESSION, createdBy)).value(ObjectFactory.CREATED_BY));
     }
 
     @Test
@@ -133,15 +130,14 @@ public class CakeControllerTest {
 
         when(cakeService.updateCake(ObjectFactory.CAKE_ID, cakeUpdateRequest)).thenReturn(cakeResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(UPDATE_CAKE_URL, ObjectFactory.CAKE_ID)
+        mockMvc.perform(MockMvcRequestBuilders.put(UPDATE_CAKE_URL, ObjectFactory.CAKE_ID)
             .content(objectToJson(cakeUpdateRequest))
             .contentType(APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(jsonPath(format(JSON_EXPRESSION, id)).value(ObjectFactory.CAKE_ID))
             .andExpect(jsonPath(format(JSON_EXPRESSION, name)).value(ObjectFactory.NAME))
-            .andExpect(jsonPath(format(JSON_EXPRESSION, description)).value(ObjectFactory.UPDATED_NAME))
-            .andExpect(jsonPath(format(JSON_EXPRESSION, createdBy)).value(ObjectFactory.CREATED_BY))
-            .andExpect(jsonPath(format(JSON_EXPRESSION, createdDate)).value(ObjectFactory.UPDATED_DESCRIPTION));
+            .andExpect(jsonPath(format(JSON_EXPRESSION, description)).value(ObjectFactory.DESCRIPTION))
+            .andExpect(jsonPath(format(JSON_EXPRESSION, createdBy)).value(ObjectFactory.CREATED_BY));
     }
 
     @Test
@@ -151,8 +147,38 @@ public class CakeControllerTest {
             .updateCake(anyLong(), any());
 
         this.mockMvc
-            .perform(MockMvcRequestBuilders.post(UPDATE_CAKE_URL, ObjectFactory.CAKE_ID)
+            .perform(MockMvcRequestBuilders.put(UPDATE_CAKE_URL, ObjectFactory.CAKE_ID)
                 .content(objectToJson(ObjectFactory.buildCakeUpdateRequest()))
+                .contentType(APPLICATION_JSON_VALUE))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath(format(JSON_EXPRESSION, errorCode)).value(CAKE_NOT_FOUND.getCode()))
+            .andExpect(jsonPath(format(JSON_EXPRESSION, errorDescription)).value(CAKE_NOT_FOUND.getMessage()));
+    }
+
+    @Test
+    public void shouldDeleteCake() throws Exception {
+
+        CakeResponse cakeResponse = ObjectFactory.buildCakeResponse();
+
+        when(cakeService.deleteCake(ObjectFactory.CAKE_ID)).thenReturn(cakeResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(DELETE_CAKE_URL, ObjectFactory.CAKE_ID)
+            .contentType(APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath(format(JSON_EXPRESSION, id)).value(ObjectFactory.CAKE_ID))
+            .andExpect(jsonPath(format(JSON_EXPRESSION, name)).value(ObjectFactory.NAME))
+            .andExpect(jsonPath(format(JSON_EXPRESSION, description)).value(ObjectFactory.DESCRIPTION))
+            .andExpect(jsonPath(format(JSON_EXPRESSION, createdBy)).value(ObjectFactory.CREATED_BY));
+    }
+
+    @Test
+    public void shouldThrowException_deleteCake() throws Exception {
+
+        doThrow(new CakeManagerException(CAKE_NOT_FOUND)).when(cakeService)
+            .deleteCake(anyLong());
+
+        this.mockMvc
+            .perform(MockMvcRequestBuilders.delete(DELETE_CAKE_URL, ObjectFactory.CAKE_ID)
                 .contentType(APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath(format(JSON_EXPRESSION, errorCode)).value(CAKE_NOT_FOUND.getCode()))

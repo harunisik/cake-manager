@@ -165,4 +165,38 @@ class CakeServiceTest {
         assertThat(CAKE_NOT_FOUND.getMessage(), is(exceptionThrown.getMessage()));
         assertThat(CAKE_NOT_FOUND.getCode(), is(exceptionThrown.getExceptionType().getCode()));
     }
+
+    @Test
+    public void shouldDeleteCake() {
+
+        CakeEntity cakeEntity = buildCake();
+        CakeResponse cakeResponse = buildCakeResponse();
+
+        when(cakeRepository.findById(CAKE_ID)).thenReturn(Optional.of(cakeEntity));
+        when(cakeMapper.toCakeResponse(cakeEntity)).thenReturn((cakeResponse));
+
+        CakeResponse result = unit.deleteCake(CAKE_ID);
+
+        verify(cakeRepository).findById(CAKE_ID);
+        verify(cakeRepository).delete(cakeEntity);
+        verify(cakeMapper).toCakeResponse(cakeEntity);
+
+        assertThat(result.getId(), comparesEqualTo(CAKE_ID));
+        assertThat(result.getName(), comparesEqualTo(NAME));
+        assertThat(result.getDescription(), comparesEqualTo(DESCRIPTION));
+        assertThat(result.getCreatedBy(), comparesEqualTo(CREATED_BY));
+        assertThat(result.getCreatedDate(), comparesEqualTo(CREATED_DATE));
+    }
+
+    @Test
+    public void shouldThrowException_deleteCake_whenCakeNotFound() {
+
+        CakeManagerException exceptionThrown = assertThrows(CakeManagerException.class, () -> unit.deleteCake(CAKE_ID));
+
+        //THEN
+        verify(cakeRepository).findById(CAKE_ID);
+
+        assertThat(CAKE_NOT_FOUND.getMessage(), is(exceptionThrown.getMessage()));
+        assertThat(CAKE_NOT_FOUND.getCode(), is(exceptionThrown.getExceptionType().getCode()));
+    }
 }
