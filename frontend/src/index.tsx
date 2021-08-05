@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
-import { AuthProvider } from './context/AuthProvider';
 import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,9 +15,7 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <ErrorBoundary>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <App />
       </ErrorBoundary>
     </BrowserRouter>
   </React.StrictMode>,

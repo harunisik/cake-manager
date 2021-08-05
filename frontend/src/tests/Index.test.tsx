@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../pages/App';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '../context/AuthProvider';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 jest.mock('react-dom', () => ({ render: jest.fn() }));
@@ -19,9 +18,7 @@ describe('Application root', () => {
       <React.StrictMode>
         <BrowserRouter>
           <ErrorBoundary>
-            <AuthProvider>
-              <App />
-            </AuthProvider>
+            <App />
           </ErrorBoundary>
         </BrowserRouter>
       </React.StrictMode>,
