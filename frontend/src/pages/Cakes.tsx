@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Button, Col, Container, Row, Alert } from 'react-bootstrap';
-import { useHistory } from 'react-router';
-import CakesTable from '../components/CakesTable';
-import { getCakes } from '../api/CakeApi';
-import { LoadStatus } from '../util/PageUtils';
+import { useEffect, useState } from "react";
+import { Button, Col, Container, Row, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import CakesTable from "../components/CakesTable";
+import { getCakes } from "../api/CakeApi";
+import { LoadStatus } from "../util/PageUtils";
 
 function Cakes() {
   const [cakes, setCakes] = useState([]);
   const [tableStatus, setTableStatus] = useState(LoadStatus.IDLE);
-  const [errorMessage, setErrorMessage] = useState('');
-  const history = useHistory();
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadCakesData();
@@ -48,9 +48,12 @@ function Cakes() {
       <Row>
         <Col>
           <Alert variant="danger" show={isFailed()} transition={false}>
-            <i className="fas fa-exclamation-triangle mr-1" aria-hidden="true" />
+            <i
+              className="fas fa-exclamation-triangle mr-1"
+              aria-hidden="true"
+            />
             {errorMessage}
-            <Alert.Link variant="link" onClick={loadCakesData} className="ml-1">
+            <Alert.Link onClick={loadCakesData} className="ml-1">
               Refresh table.
             </Alert.Link>
           </Alert>
@@ -58,7 +61,11 @@ function Cakes() {
       </Row>
       <Row className="mb-3">
         <Col className="text-right">
-          <Button variant="outline-info" size="sm" onClick={() => history.push('/cake')}>
+          <Button
+            variant="outline-info"
+            size="sm"
+            onClick={() => navigate("/cake")}
+          >
             <i className="fas fa-plus fa-fw" aria-hidden="true" />
             Add Cake
           </Button>

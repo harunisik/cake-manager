@@ -1,25 +1,38 @@
-import { ChangeEventHandler, FormEventHandler, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router';
-import { getCake, saveCake, updateCake } from '../api/CakeApi';
-import { Col, Container, Row, Alert } from 'react-bootstrap';
-import CakeForm from '../components/CakeForm';
-import { toast } from 'react-toastify';
-import { LoadStatus, FormSubmitStatus, PageMode } from '../util/PageUtils';
-import ModalComp from '../components/Modal';
+import {
+  ChangeEventHandler,
+  FormEventHandler,
+  useEffect,
+  useState,
+} from "react";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getCake, saveCake, updateCake } from "../api/CakeApi";
+import { Col, Container, Row, Alert } from "react-bootstrap";
+import CakeForm from "../components/CakeForm";
+import { toast } from "react-toastify";
+import { LoadStatus, FormSubmitStatus, PageMode } from "../util/PageUtils";
+import ModalComp from "../components/Modal";
 
 interface PageParams {
   id: string;
 }
 
 function Cake() {
-  const [cakeData, setCakeData] = useState({ id: '', name: '', description: '', createdBy: '', createdDate: '' });
-  const [formSubmitStatus, setFormSubmitStatus] = useState(FormSubmitStatus.IDLE);
+  const [cakeData, setCakeData] = useState({
+    id: "",
+    name: "",
+    description: "",
+    createdBy: "",
+    createdDate: "",
+  });
+  const [formSubmitStatus, setFormSubmitStatus] = useState(
+    FormSubmitStatus.IDLE
+  );
   const [formLoadStatus, setFormLoadStatus] = useState(LoadStatus.IDLE);
-  const [errorMessage, setErrorMessage] = useState('');
-  const { id } = useParams<PageParams>();
+  const [errorMessage, setErrorMessage] = useState("");
+  const { id } = useParams();
   const pageMode = id ? PageMode.EDIT : PageMode.NEW;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (pageMode === PageMode.EDIT) {
@@ -29,6 +42,8 @@ function Cake() {
 
   const loadCakeData = () => {
     setFormLoadStatus(LoadStatus.LOADING);
+
+    if (!id) return;
 
     getCake(id)
       .then((cake) => {
@@ -41,7 +56,9 @@ function Cake() {
       });
   };
 
-  const handleDataChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
+  const handleDataChange: ChangeEventHandler<HTMLInputElement> = ({
+    target,
+  }) => {
     const { name, value } = target;
     setCakeData((previousData) => {
       return { ...previousData, [name]: value };
@@ -79,6 +96,8 @@ function Cake() {
           setErrorMessage(error.message);
         });
     } else if (pageMode === PageMode.EDIT) {
+      if (!id) return;
+
       updateCake(id, data)
         .then((cake) => {
           processSuccessResponse();
@@ -91,12 +110,15 @@ function Cake() {
   };
 
   const processSuccessResponse = () => {
-    toast.info('Cake saved successfully.', { position: 'bottom-right' });
-    history.push('/');
+    toast.info("Cake saved successfully.", { position: "bottom-right" });
+    navigate("/");
   };
 
   const isFailed = () => {
-    return formSubmitStatus === FormSubmitStatus.FAILED || formLoadStatus === LoadStatus.FAILED;
+    return (
+      formSubmitStatus === FormSubmitStatus.FAILED ||
+      formLoadStatus === LoadStatus.FAILED
+    );
   };
 
   return (
@@ -109,7 +131,7 @@ function Cake() {
       <Container fluid>
         <Row>
           <Col>
-            <h3>{pageMode === PageMode.EDIT ? 'Edit ' : 'New '}Cake</h3>
+            <h3>{pageMode === PageMode.EDIT ? "Edit " : "New "}Cake</h3>
           </Col>
         </Row>
         <Row>
@@ -120,7 +142,10 @@ function Cake() {
         <Row>
           <Col>
             <Alert variant="danger" show={isFailed()} transition={false}>
-              <i className="fas fa-exclamation-triangle mr-1" aria-hidden="true" />
+              <i
+                className="fas fa-exclamation-triangle mr-1"
+                aria-hidden="true"
+              />
               {errorMessage}
             </Alert>
           </Col>

@@ -8,7 +8,6 @@ COPY . /usr/src/app
 
 RUN npm install -g serve
 RUN npm ci --only=production
-RUN npm run build
 
 EXPOSE 3000
 

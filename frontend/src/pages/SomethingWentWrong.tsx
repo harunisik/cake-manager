@@ -1,18 +1,22 @@
-import { Link } from 'react-router-dom';
-import somethingWentWrongImg from '../images/something-went-wrong.jpg';
+import { Link } from "react-router-dom";
+import somethingWentWrongImg from "../images/something-went-wrong.jpg";
 
 function SomethingWentWrong() {
   const center = {
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '50%',
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "50%",
   };
 
   return (
     <div className="text-center">
       <div>
-        <img src={somethingWentWrongImg} alt="Something went wrong." style={center} />
+        <img
+          src={somethingWentWrongImg}
+          alt="Something went wrong."
+          style={center}
+        />
       </div>
       <div className="line"></div>
 

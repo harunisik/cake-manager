@@ -1,8 +1,8 @@
-import React from 'react';
-import { Table } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
-import { LoadStatus } from '../util/PageUtils';
-import { EditCell, HeaderCell, NoDataRow, SpinnerRow } from '../util/TableUtil';
+import React from "react";
+import { Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { LoadStatus } from "../util/PageUtils";
+import { EditCell, HeaderCell, NoDataRow, SpinnerRow } from "../util/TableUtil";
 
 interface Props {
   status: LoadStatus;
@@ -16,11 +16,13 @@ interface Props {
 }
 
 const CakesTable = ({ cakeList, status }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
-    <Table bordered hover size="sm" style={{ minHeight: '100px' }}>
-      <caption style={{ captionSide: 'top', paddingTop: 0 }}>List of cakes</caption>
+    <Table bordered hover size="sm" style={{ minHeight: "100px" }}>
+      <caption style={{ captionSide: "top", paddingTop: 0 }}>
+        List of cakes
+      </caption>
 
       <thead className="thead-light">
         <tr>
@@ -51,7 +53,7 @@ const CakesTable = ({ cakeList, status }: Props) => {
                   <td>{cake.description}</td>
                   <td>{cake.createdBy}</td>
                   <td>{cake.createdDate}</td>
-                  <EditCell onClick={() => history.push(`/cake/${cake.id}`)} />
+                  <EditCell onClick={() => navigate(`/cake/${cake.id}`)} />
                 </tr>
               </tbody>
             </React.Fragment>
